@@ -98,7 +98,8 @@ def gov_sg_api_scrape():
         except: articleDescription = "None"
         articleID = article['itemid_s']
         articleMainText = article['bodytext_t']
-        articleSummarized = meaningCloudSummarizer(articleMainText)
+        nCount = find_nth(articleMainText, '. ', articleMainText.count('. ') * 0.5)
+        # articleSummarized = meaningCloudSummarizer(articleMainText)
         datePublished = article['publishdate_s']
         ddict['imgUrl'] = imgUrl
         ddict['minutesToRead'] = minutesToRead
@@ -107,11 +108,19 @@ def gov_sg_api_scrape():
         ddict['articleDescription'] = articleDescription
         ddict['articleID'] = articleID
         ddict['articleMainText'] = articleMainText
-        ddict['articleSummarized'] = articleSummarized
+        # ddict['articleSummarized'] = articleSummarized
+        ddict['articleSummarized'] = articleMainText[:nCount]
         ddict['datePublished'] = datePublished
         outputList.append(ddict)
     return outputList
 
+
+def find_nth(haystack, needle, n):
+    start = haystack.find(needle)
+    while start >= 0 and n > 1:
+        start = haystack.find(needle, start + len(needle))
+        n -= 1
+    return start
 
 
 
@@ -142,6 +151,7 @@ def meaningCloudSummarizer(text):
     print(f'Number of Sentences initially: {numSentences}')
     url = "https://meaningcloud-summarization-v1.p.rapidapi.com/summarization-1.0"
     querystring = {"sentences": "10", "txt": text}
+    # print("SMMRIZE_API_KEY", os.environ.get('SMMRIZE_API_KEY'))
     smmrizeHeaders = {
         'accept': "application/json",
         'x-rapidapi-host': os.environ.get('SMMRIZE_API_HOST'),
