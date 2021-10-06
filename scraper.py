@@ -98,7 +98,7 @@ def gov_sg_api_scrape():
         except: articleDescription = "None"
         articleID = article['itemid_s']
         articleMainText = article['bodytext_t']
-        nCount = find_nth(articleMainText, '. ', articleMainText.count('. ') * 0.5)
+        nCount = find_nth(articleMainText, '. ', articleMainText.count('. ') * 0.3)
         # articleSummarized = meaningCloudSummarizer(articleMainText)
         datePublished = article['publishdate_s']
         ddict['imgUrl'] = imgUrl
@@ -107,7 +107,7 @@ def gov_sg_api_scrape():
         ddict['articleTitle'] = articleTitle
         ddict['articleDescription'] = articleDescription
         ddict['articleID'] = articleID
-        ddict['articleMainText'] = articleMainText
+        # ddict['articleMainText'] = articleMainText
         # ddict['articleSummarized'] = articleSummarized
         ddict['articleSummarized'] = articleMainText[:nCount]
         ddict['datePublished'] = datePublished
