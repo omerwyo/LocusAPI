@@ -1,7 +1,6 @@
-import logging
 import json
-
-from flask import request, jsonify
+import logging
+from flask import request
 
 from LocusAPI import app
 
@@ -13,7 +12,7 @@ def admin():
     data = request.get_json()
     logging.info("data sent for evaluation {}".format(data))
     inputValue = data.get("input")
-    result = "Test"
+    result = ""
     logging.info("My result :{}".format(result))
     return json.dumps(result)
 
