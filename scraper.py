@@ -124,8 +124,6 @@ def find_nth(haystack, needle, n):
         n -= 1
     return start
 
-
-
 # def pdfToText():
 #     FILE_PATH = 'cinemasadvisory2.pdf'
 #
