@@ -1,8 +1,8 @@
 from flask import Flask
 # from flask_sqlalchemy import SQLAlchemy
 
-import LocusAPI.routes.admin
-import LocusAPI.routes.tag
+import LocusDev.routes.admin
+import LocusDev.routes.tag
 
 app = Flask(__name__)
 
