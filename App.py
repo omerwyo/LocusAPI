@@ -1,13 +1,22 @@
 import logging
 import socket
-from LocusAPI import app
+from LocusAPI import app, db
+
 logger = logging.getLogger(__name__)
+
+
 
 @app.route('/', methods=['GET'])
 def default_route():
     # to actually redirect to our API Developer Documentation page
     return "Python Template"
 
+class Article(db.Model):
+    __tablename__='articles'
+
+    id = db.Column(db.Integer, primary_key=True)
+    description = db.Column(db.String)
+    datePosted = db.Column(db.String)
 
 logger = logging.getLogger()
 handler = logging.StreamHandler()
@@ -27,4 +36,5 @@ if __name__ == "__main__":
     sock.bind(('localhost', 0))
     port = sock.getsockname()[1]
     sock.close()
+    db.create_all()
     app.run(debug=True)
