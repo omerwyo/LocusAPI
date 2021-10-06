@@ -1,9 +1,6 @@
 import logging
 import socket
-from LocusAPI import app#, db
-
-import LocusAPI.routes.admin
-import LocusAPI.routes.tag
+from LocusDev import app#, db
 
 logger = logging.getLogger(__name__)
 @app.route('/', methods=['GET'])
