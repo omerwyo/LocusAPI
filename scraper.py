@@ -32,7 +32,7 @@ def parseMOHFeed():
             text = article.description[ article.description.lower().find('summary') : article.description.lower().find('<strong>', article.description.lower().find('summary')) ]
             text = lh.fromstring(text).text_content().replace('\xa0', ' ')
             ddict['title']= article.title
-            ddict['description'] = article.description
+            # ddict['description'] = article.description
             ddict['body_text'] = text
             ddict['date_published'] = article.published
             ddict['article_link'] = article.link
