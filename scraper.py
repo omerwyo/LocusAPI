@@ -30,7 +30,9 @@ def parseMOHFeed():
         if article.title.lower().strip().startswith('update on local covid-19 situation'):
             ddict = {}
             text = article.description[ article.description.lower().find('summary') : article.description.lower().find('<strong>', article.description.lower().find('summary')) ]
-            text = lh.fromstring(text).text_content().replace('\xa0', ' ')
+            text = lh.fromstring(text).text_content().replace('\xa0', ' ').replace('·', '')
+            if text.startswith('Summary'):
+                text= text[len("Summary of local situation"):].strip()
             ddict['title']= article.title
             # ddict['description'] = article.description
             ddict['body_text'] = text
