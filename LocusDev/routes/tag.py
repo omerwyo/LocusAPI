@@ -4,7 +4,7 @@ from flask import request#, jsonify
 from scraper import parseMOHFeed
 from scraper import gov_sg_api_scrape
 
-from LocusDev import app
+# from LocusDev import app
 
 logger = logging.getLogger(__name__)
 

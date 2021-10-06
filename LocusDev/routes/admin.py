@@ -2,7 +2,7 @@ import json
 import logging
 from flask import request
 
-from LocusDev import app
+# from LocusDev import app
 
 logger = logging.getLogger(__name__)
 
