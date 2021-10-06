@@ -87,7 +87,9 @@ def gov_sg_api_scrape():
         print('Json issue')
         return
     print("Total Num responses:", data['response']['docs'])
+    outputList = []
     for article in data['response']['docs']:
+        ddict = {}
         imgUrl = "www.gov.sg/" + article['imageurl_s']
         minutesToRead = article['minuteread_s']
         articleUrl = "www.gov.sg/" + article['pageurl_s']
@@ -97,23 +99,19 @@ def gov_sg_api_scrape():
         articleMainText = article['bodytext_t']
         articleSummarized = meaningCloudSummarizer(articleMainText)
         datePublished = article['publishdate_s']
+        ddict['imgUrl'] = imgUrl
+        ddict['minutesToRead'] = minutesToRead
+        ddict['articleUrl'] = articleUrl
+        ddict['articleTitle'] = articleTitle
+        ddict['articleDescription'] = articleDescription
+        ddict['articleID'] = articleID
+        ddict['articleMainText'] = articleMainText
+        ddict['articleSummarized'] = articleSummarized
+        ddict['datePublished'] = datePublished
+        outputList.append(ddict)
+    return outputList
 
-        print(f'Title : {articleTitle}')
-        print(f'Description : {articleDescription}')
-        print(f'Main Text: {articleMainText}')
-        print(f'Time to read : {minutesToRead} mins')
-        print(f'URL : {articleUrl}')
-        print(f'Published on : {datePublished}')
-        print()
-        print(f'Summarized Text : {articleSummarized}')
-        print()
-        #
-        # try:
-        #     writeScrapedRow({'articleTitle': articleTitle, 'articleDescription': articleDescription,
-        #                      'articleSummarized': articleSummarized, 'articleBodyText': articleMainText,
-        #                      'articleUrl': articleUrl, 'imgUrl': imgUrl, 'articleID': articleID,
-        #                      'datePublished': datePublished})
-    print(f'Scraped from {datePublished} till today')
+
 
 
 # def pdfToText():

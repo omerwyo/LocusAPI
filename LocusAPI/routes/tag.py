@@ -8,7 +8,7 @@ from LocusAPI import app
 
 logger = logging.getLogger(__name__)
 
-@app.route('/v1', methods=['GET'])
+@app.route('/v1/daily', methods=['GET'])
 def dailyUpdates():
     data = request.get_json()
     logging.info("data sent for evaluation {}".format(data))
