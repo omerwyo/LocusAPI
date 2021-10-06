@@ -94,7 +94,8 @@ def gov_sg_api_scrape():
         minutesToRead = article['minuteread_s']
         articleUrl = "www.gov.sg/" + article['pageurl_s']
         articleTitle = article['title_t']
-        articleDescription = article['short_description_t']
+        try: articleDescription = article['short_description_t']
+        except: articleDescription = "None"
         articleID = article['itemid_s']
         articleMainText = article['bodytext_t']
         articleSummarized = meaningCloudSummarizer(articleMainText)
