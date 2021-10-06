@@ -2,6 +2,9 @@ import logging
 import socket
 from LocusAPI import app#, db
 
+import LocusAPI.routes.admin
+import LocusAPI.routes.tag
+
 logger = logging.getLogger(__name__)
 @app.route('/', methods=['GET'])
 def default_route():
