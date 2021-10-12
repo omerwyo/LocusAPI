@@ -154,11 +154,11 @@ def meaningCloudSummarizer(text):
     # print("SMMRIZE_API_KEY", os.environ.get('SMMRIZE_API_KEY'))
     smmrizeHeaders = {
         'accept': "application/json",
-        'x-rapidapi-host': os.environ.get('SMMRIZE_API_HOST'),
+        'x-rapidapi-host': "meaningcloud-summarization-v1.p.rapidapi.com",
         'x-rapidapi-key': os.environ.get('SMMRIZE_API_KEY')
     }
     try:
-        response = requests.request("GET", url, headers=smmrizeHeaders, params=querystring)
+        response = requests.request("GET", url, headers=smmrizeHeaders, params=querystring, timeout=15)
     except requests.exceptions.Timeout:
         return
     if response.status_code != 200:
