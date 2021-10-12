@@ -22,10 +22,10 @@ import os
 import feedparser
 import lxml.html as lh
 from flask_apscheduler import APScheduler
-from datetime import  datetime, timedelta
-from pytz import utc
 
+scheduler = APScheduler()
 
+@scheduler.task('cron', id='parseMOHFeed', hour='16', minute='10')
 def parseMOHFeed():
     NewsFeed = feedparser.parse("https://www.moh.gov.sg/feeds/news-highlights")
     count = 0
@@ -42,6 +42,7 @@ def parseMOHFeed():
             ddict['body_text'] = text
             ddict['date_published'] = article.published
             ddict['article_link'] = article.link
+            ddict['article_id'] = article.link # link serves as the id of the article
             outputList.append(ddict)
             count+=1
     print(count)
@@ -55,9 +56,8 @@ def parseMOHFeed():
 # POFMA
 # Environment
 # Economy and Finance
-
 # not to include : 'Others'
-
+@scheduler.task('cron', id='gov_sg_api_scrape', hour='16', minute='30')
 def gov_sg_api_scrape():
     NUM_ROWS_GOV_SG_API = str(50)
     GOV_SG_API = "https://www.gov.sg/api/v1/search?fq=contenttype_s:[*%20TO%20*]&fq=isfeatured_b:false&fq=primarytopic_s:[*%20TO%20*]%20OR%20secondarytopic_sm:[*%20TO%20*]&sort=publish_date_tdt%20desc&start=0&rows={}".format(NUM_ROWS_GOV_SG_API)

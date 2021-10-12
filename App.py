@@ -1,12 +1,14 @@
 import logging
 import socket
 from LocusDev import app#, db
+from flask import redirect
 
 logger = logging.getLogger(__name__)
 @app.route('/', methods=['GET'])
 def default_route():
     # to actually redirect to our API Developer Documentation page
-    return "Locus IO HEHEH"
+    return redirect("https://app.gitbook.com/@omerbaggia123/s/locusapi/")
+    # return "Welcome to Locus.io"
 
 # class Article(db.Model):
 #     __tablename__='articles'
