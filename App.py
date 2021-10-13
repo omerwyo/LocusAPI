@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 @app.route('/', methods=['GET'])
 def default_route():
     # to actually redirect to our API Developer Documentation page
-    return redirect("https://app.gitbook.com/@omerbaggia123/s/locusapi/")
+    return redirect("https://omerwyo.gitbook.io/locusapi/")
     # return "Locus IO HEHEH"
 
 # class Article(db.Model):
