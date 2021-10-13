@@ -1,6 +1,6 @@
 import json
 import logging
-from flask import request
+from flask import request, jsonify
 
 from LocusDev import app
 
