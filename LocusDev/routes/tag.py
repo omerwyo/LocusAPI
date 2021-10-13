@@ -10,9 +10,10 @@ logger = logging.getLogger(__name__)
 
 @app.route('/v1/daily', methods=['GET'])
 def dailyUpdates():
+    numEntries = request.args.get('numEntries')
     data = request.get_json()
     logging.info("data sent for evaluation {}".format(data))
-    result = parseMOHFeed()
+    result = parseMOHFeed(numEntries)
     logging.info("My result :{}".format(result))
     return jsonify(result)
 
