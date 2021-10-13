@@ -1,21 +1,22 @@
 import logging
 import socket
-from LocusDev import app#, db
+from LocusDev import app, db
 from flask import redirect
+from scraper import scheduler
 
 logger = logging.getLogger(__name__)
 @app.route('/', methods=['GET'])
 def default_route():
     # to actually redirect to our API Developer Documentation page
-    return redirect("https://app.gitbook.com/@omerbaggia123/s/locusapi/")
+    return redirect("https://omerwyo.gitbook.io/locusapi/")
     # return "Welcome to Locus.io"
 
-# class Article(db.Model):
-#     __tablename__='articles'
-#
-#     id = db.Column(db.Integer, primary_key=True)
-#     description = db.Column(db.String)
-#     datePosted = db.Column(db.String)
+class Article(db.Model):
+    __tablename__='articles'
+
+    id = db.Column(db.Integer, primary_key=True)
+    description = db.Column(db.String)
+    datePosted = db.Column(db.String)
 
 logger = logging.getLogger()
 handler = logging.StreamHandler()
@@ -28,7 +29,7 @@ logger.setLevel(logging.INFO)
 if __name__ == "__main__":
 
     # our scheduler function goes here: 
-    # .... 
+    scheduler.start()
 
     logging.info("Starting application ...")
     # sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

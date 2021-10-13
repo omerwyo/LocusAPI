@@ -1,6 +1,6 @@
 import logging
 import json
-from flask import request#, jsonify
+from flask import request, jsonify
 from scraper import parseMOHFeed
 from scraper import gov_sg_api_scrape
 
