@@ -26,7 +26,7 @@ from datetime import  datetime, timedelta
 from pytz import utc
 
 
-def parseMOHFeed(numEntries=15):
+def parseMOHFeed():
     NewsFeed = feedparser.parse("https://www.moh.gov.sg/feeds/news-highlights")
     count = 0
     outputList = []
@@ -45,7 +45,7 @@ def parseMOHFeed(numEntries=15):
             outputList.append(ddict)
             count+=1
             # specify number of entries
-            if count == numEntries: break
+            # if count == numEntries: break
     print(count)
     return outputList
 
