@@ -15,8 +15,10 @@ class Article(db.Model):
     __tablename__='articles'
 
     id = db.Column(db.Integer, primary_key=True)
-    description = db.Column(db.String)
-    datePosted = db.Column(db.String)
+    description = db.Column(db.Text)
+    datePosted = db.Column(db.Text)
+    bodyText = db.Coumn(db.Text)
+
 
 logger = logging.getLogger()
 handler = logging.StreamHandler()

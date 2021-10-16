@@ -22,10 +22,17 @@ import os
 import feedparser
 import lxml.html as lh
 from flask_apscheduler import APScheduler
+import time
 
 scheduler = APScheduler()
 
-@scheduler.task("interval", id="parseMOHFeed", hours=24, misfire_grace_time=900)
+@scheduler.task("interval", id="parseMOHFeed", hours=2, misfire_grace_time=900)
+def wrapperTask():
+    parseMOHFeed()
+    time.sleep(5)
+    gov_sg_api_scrape()
+    return
+
 def parseMOHFeed():
     NewsFeed = feedparser.parse("https://www.moh.gov.sg/feeds/news-highlights")
     count = 0
@@ -58,7 +65,6 @@ def parseMOHFeed():
 # Economy and Finance
 # not to include : 'Others'
 
-@scheduler.task("interval", id="gov_sg_api_scrape", hours=2, misfire_grace_time=900)
 def gov_sg_api_scrape():
     NUM_ROWS_GOV_SG_API = str(50)
     GOV_SG_API = "https://www.gov.sg/api/v1/search?fq=contenttype_s:[*%20TO%20*]&fq=isfeatured_b:false&fq=primarytopic_s:[*%20TO%20*]%20OR%20secondarytopic_sm:[*%20TO%20*]&sort=publish_date_tdt%20desc&start=0&rows={}".format(NUM_ROWS_GOV_SG_API)
@@ -136,7 +142,6 @@ def find_nth(haystack, needle, n):
 #         reader = PyPDF2.PdfFileReader(f)
 #         page = reader.getPage(0)
 #         print(page.extractText())
-
 
 # def smmrize(text):
 #     print(text)
