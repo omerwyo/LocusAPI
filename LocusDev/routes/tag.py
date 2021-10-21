@@ -15,7 +15,9 @@ def dailyUpdates():
     logging.info("data sent for evaluation {}".format(data))
     result = parseMOHFeed()
     logging.info("My result :{}".format(result))
-    return jsonify(result)
+    response = jsonify(result)
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
 
 @app.route('/v1/govpress', methods=['GET'])
 def generalData():
@@ -23,5 +25,7 @@ def generalData():
     logging.info("data sent for evaluation {}".format(data))
     result = gov_sg_api_scrape()
     logging.info("My result :{}".format(result))
-    return jsonify(result)
+    response = jsonify(result)
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
 
