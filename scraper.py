@@ -127,7 +127,6 @@ def gov_sg_api_scrape():
         outputList.append(ddict)
     return outputList
 
-
 def find_nth(haystack, needle, n):
     start = haystack.find(needle)
     while start >= 0 and n > 1:
@@ -187,7 +186,3 @@ def meaningCloudSummarizer(text):
         pass
     # print(response.text)
     return summarizedText.replace('[...] ', '')
-
-
-# if __name__ == '__main__':
-    # response = requests.get("https://www.sgpc.gov.sg/?agency=MOM")

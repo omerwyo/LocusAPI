@@ -16,8 +16,9 @@ class Article(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.Text)
-    datePosted = db.Column(db.Text)
-    bodyText = db.Coumn(db.Text)
+    datePosted = db.Column(db.Date)
+    bodyText = db.Column(db.Text)
+    minutesToRead = db.Column(db.Integer)
 
 
 logger = logging.getLogger()
