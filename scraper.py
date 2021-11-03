@@ -38,6 +38,7 @@ def parseMOHFeed():
             if text.startswith('Summary'):
                 text= text[len("Summary of local situation"):].strip()
             ddict['title']= article.title
+            if len(text) < 15: continue
             # ddict['description'] = article.description
             ddict['body_text'] = text
             ddict['date_published'] = article.published
