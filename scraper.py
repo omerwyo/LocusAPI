@@ -50,7 +50,6 @@ def parseMOHFeed():
     print(count)
     return outputList
 
-
 # Tags:
 # Health
 # COVID-19
@@ -123,33 +122,12 @@ def gov_sg_api_scrape():
         outputList.append(ddict)
     return outputList
 
-
 def find_nth(haystack, needle, n):
     start = haystack.find(needle)
     while start >= 0 and n > 1:
         start = haystack.find(needle, start + len(needle))
         n -= 1
     return start
-
-# def pdfToText():
-#     FILE_PATH = 'cinemasadvisory2.pdf'
-#
-#     with open(FILE_PATH, mode='rb') as f:
-#         reader = PyPDF2.PdfFileReader(f)
-#         page = reader.getPage(0)
-#         print(page.extractText())
-
-
-# def smmrize(text):
-#     print(text)
-#     smmrizeHeader = {"Expect" : ""}
-#     data = {"SM_API_KEY" : "<apikey>", "SM_API_INPUT" : text, "SM_LENGTH" : 7}
-#     try: response = requests.get('https://api.smmry.com', data = data, headers = smmrizeHeader, timeout = 15)
-#     except: 
-#         print('fail')
-#         return
-#     print(response.text)
-
 
 # limited to 20000 requests a month, $0.01 aft that
 def meaningCloudSummarizer(text):
@@ -184,7 +162,3 @@ def meaningCloudSummarizer(text):
         pass
     # print(response.text)
     return summarizedText.replace('[...] ', '')
-
-
-# if __name__ == '__main__':
-    # response = requests.get("https://www.sgpc.gov.sg/?agency=MOM")
