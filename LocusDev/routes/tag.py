@@ -1,8 +1,8 @@
 import logging
 import json
 from flask import request, jsonify
-from scraper import parseMOHFeed
-from scraper import gov_sg_api_scrape
+from scraper import parseMOHFeed, gov_sg_api_scrape, Article
+from sqlalchemy import desc
 
 from LocusDev import app
 
@@ -13,14 +13,15 @@ def dailyUpdates():
     data = request.get_json()
     logging.info("data sent for evaluation {}".format(data))
     result = parseMOHFeed()
+    entities = Article.query.order_by(desc(Article.time)).all()
     logging.info("My result :{}".format(result))
-    return json.dumps(result)
+    return jsonify(json_list = entities)
 
-@app.route('/v1/govpress', methods=['GET'])
-def generalData():
-    data = request.get_json()
-    logging.info("data sent for evaluation {}".format(data))
-    result = gov_sg_api_scrape()
-    logging.info("My result :{}".format(result))
-    return json.dumps(result)
+# @app.route('/v1/govpress', methods=['GET'])
+# def generalData():
+#     data = request.get_json()
+#     logging.info("data sent for evaluation {}".format(data))
+#     result = gov_sg_api_scrape()
+#     logging.info("My result :{}".format(result))
+#     return json.dumps(result)
 

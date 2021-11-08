@@ -1,11 +1,3 @@
-# 1. ALL IMPT Updates on COVID Related stuff (Updates to Measures) (Uses API)
-# done
-
-# 2. scrapes MOH Press Releases for Differentiated measures etc, more impt/minute stuff (parse XML)
-# https://www.moh.gov.sg/feeds/news-highlights (parse XML) - ALL Press Updates in the past month, their titles and links
-# done ish
-
-
 # 3. scrapes gov.sg press releases for latest press releases on the following topics (parse http)
 # https://www.sgpc.gov.sg/
 # - MSE - They order businesses to close down when breaching measures, issue advisories on COVID
@@ -22,20 +14,75 @@ import os
 import feedparser
 import lxml.html as lh
 from flask_apscheduler import APScheduler
+from LocusDev import db
 import time
 
 scheduler = APScheduler()
 
-@scheduler.task("interval", id="parseMOHFeed", hours=2, misfire_grace_time=900)
+def dump_datetime(value):
+    """Deserialize datetime object into string form for JSON processing."""
+    if value is None:
+        return None
+    return value.isoformat()
+
+class Article(db.Model):
+    __tablename__='articles'
+
+    id = db.Column(db.Integer, primary_key=True)
+    articleId = db.Column(db.String, unique=True)
+    title = db.Column(db.String)
+    description = db.Column(db.Text)
+    datePosted = db.Column(db.DateTime)
+    bodyText = db.Column(db.Text)
+
+    def __init__(self, articleId, title, description, datePosted, bodyText):
+        self.articleId = articleId
+        self.title = title
+        self.description = description
+        self.datePosted = datePosted
+        self.bodyText = bodyText
+
+    def __repr__(self):
+        return '<Article Link %r : %r>' % self.articleId, self.datePosted
+
+    @property
+    def serialize(self):
+        """Return object data in easily serializable format"""
+        return {
+            'articleId': self.id,
+            'title': self.title,
+            'description': self.description,
+            'datePosted': dump_datetime(self.datePosted),
+            'bodyText': self.bodyText
+        }
+
+class EventType(db.Model):
+    __tablename__ = 'tags'
+
+    id = db.Column(db.Integer, primary_key=True)
+    eventTypeName = db.Column(db.String, unique=True)
+    currString = db.Column(db.String)
+
+    def __init__(self, tagName, currString):
+        self.eventTypeName = tagName
+        self.currString = currString
+
+    def __repr__(self):
+        return '<Event Type %s : %s>' % self.eventTypeName, self.currString
+
+# @scheduler.task("interval", id="wrapper", hours=4, misfire_grace_time=900)
+@scheduler.task("cron", id="wrapper", hour=16, minute=32)
 def wrapperTask():
     parseMOHFeed()
     time.sleep(5)
     gov_sg_api_scrape()
+    time.sleep(5)
+    checkTags()
+    time.sleep(2)
     return
 
 def parseMOHFeed():
     NewsFeed = feedparser.parse("https://www.moh.gov.sg/feeds/news-highlights")
-    count = 0
     outputList = []
     for article in NewsFeed.entries:
         if article.title.lower().strip().startswith('update on local covid-19 situation'):
@@ -43,18 +90,19 @@ def parseMOHFeed():
             text = article.description[ article.description.lower().find('summary') : article.description.lower().find('<strong>', article.description.lower().find('summary')) ]
             text = lh.fromstring(text).text_content().replace('\xa0', ' ').replace('·', '')
             if text.startswith('Summary'):
-                text= text[len("Summary of local situation"):].strip()
-            ddict['title']= article.title
-            # ddict['description'] = article.description
-            ddict['body_text'] = text
-            ddict['date_published'] = article.published
-            ddict['article_link'] = article.link
-            ddict['article_id'] = article.link # link serves as the id of the article
-            outputList.append(ddict)
-            count+=1
-    print(count)
-    return outputList
+                text = text[len("Summary of local situation"):].strip()
 
+            checker = Article.query.filter_by(articleId=article.link).first()
+            if checker is not None: break
+
+            article = Article(articleId=article.link, # link serves as the id of the article
+                          title=article.title,
+                          bodyText=text,
+                          datePublished=article.published,
+                          description=article.link)
+            db.session.add(article)
+            db.session.commit()
+    return outputList
 
 # Tags:
 # Health
@@ -64,7 +112,6 @@ def parseMOHFeed():
 # Environment
 # Economy and Finance
 # not to include : 'Others'
-
 def gov_sg_api_scrape():
     NUM_ROWS_GOV_SG_API = str(50)
     GOV_SG_API = "https://www.gov.sg/api/v1/search?fq=contenttype_s:[*%20TO%20*]&fq=isfeatured_b:false&fq=primarytopic_s:[*%20TO%20*]%20OR%20secondarytopic_sm:[*%20TO%20*]&sort=publish_date_tdt%20desc&start=0&rows={}".format(NUM_ROWS_GOV_SG_API)
@@ -97,7 +144,7 @@ def gov_sg_api_scrape():
     try:
         testRun = data['response']
     except:
-        print('Json issue')
+        print('Json Issue')
         return
     print("Total Num responses:", data['response']['docs'])
     outputList = []
@@ -108,25 +155,79 @@ def gov_sg_api_scrape():
         articleUrl = "www.gov.sg/" + article['pageurl_s']
         articleTitle = article['title_t']
         try: articleDescription = article['short_description_t']
-        except: articleDescription = "None"
+        except: articleDescription = ""
         articleID = article['itemid_s']
         articleMainText = article['bodytext_t']
-        nCount = find_nth(articleMainText, '. ', articleMainText.count('. ') * 0.3)
+
+        # nCount = find_nth(articleMainText, '. ', articleMainText.count('. ') * 0.3)
         # articleSummarized = meaningCloudSummarizer(articleMainText)
+
         datePublished = article['publishdate_s']
-        ddict['imgUrl'] = imgUrl
-        ddict['minutesToRead'] = minutesToRead
-        ddict['articleUrl'] = articleUrl
-        ddict['articleTitle'] = articleTitle
-        ddict['articleDescription'] = articleDescription
-        ddict['articleID'] = articleID
-        # ddict['articleMainText'] = articleMainText
+
+        checker = Article.query.filter_by(articleId=articleUrl).first()
+        if checker is not None: break
+
+        article = Article(articleId= articleUrl,
+                          title=articleTitle,
+                          bodyText=articleMainText,
+                          datePublished=datePublished,
+                          description=articleDescription)
+        db.session.add(article)
+        db.session.commit()
+
+        # ddict['imgUrl'] = imgUrl
+        # ddict['minutesToRead'] = minutesToRead
         # ddict['articleSummarized'] = articleSummarized
-        ddict['articleSummarized'] = articleMainText[:nCount]
-        ddict['datePublished'] = datePublished
-        outputList.append(ddict)
+        # ddict['articleSummarized'] = articleMainText[:nCount]
     return outputList
 
+def checkTags():
+    # Attractions: Accordion 3
+    # Country and Recreational Clubs: Accordion 6
+    # Enterprises in Finance Sector: Accordion 13
+    # Funeral Events: Accordion 15
+    # F&B: Accordion 16
+    # Hotels: Accordion 20
+    # Solemnisation and Reception: Accordion 22
+    # MICE Events : Accordion 26
+    # Nightlife: Accordion 27
+    # Property Show Galleries: Accordion 31
+    # Public Entertainment: Accordion 32
+    # Religious organisations : Accordion 33
+    # Sports Sector Enterprises: Accordion 36
+    # Tours: Accordion 38
+    try:
+        response = requests.get('https://www.gobusiness.gov.sg/safemanagement/sector/', timeout=15)
+    except requests.exceptions.Timeout:
+        return
+    if response.status_code != 200:
+        print(response.status_code)
+        return
+    root = lh.fromstring(response.text)
+    # TODO: find len 'jekyllcodex_accordion', replace with 42
+    SectorList = ['Attractions', 'Country and recreation clubs', 'Finance', 'Funeral events', 'F&B', 'Hotels',
+                  'Marriage solemnisations and wedding receptions', 'MICE events', 'Nightlife Establishments (Pivoted)',
+                  'Property show galleries', 'Public entertainment', 'Religious organisations',
+                  'Sports sector enterprises, sports education, and premises with sports facilities', 'Tours']
+    for num in range(1, 42):
+        sectorContent = root.xpath(f'//*[@id="main-content"]/section[3]/div/div/div[2]/div/div/div/ul/li[{num}]')
+        text = sectorContent[0].text_content()
+        sectorName = text[:text.find('\n')]
+        if sectorName in SectorList:
+            # print(sectorName.strip())
+            text = text[len(sectorName):]
+            check = 0
+            lastUpdatedStr = ""
+            while check != -1:
+                lastUpdatedStr += text[text.find('[', check): text.find(']', check) + 1]
+                text = text[text.find(']', check):]
+                check = text.find('[')
+
+            checker = EventType.query.filter_by(eventTypeName=lastUpdatedStr.strip()).first()
+            if checker is not None and checker.currString != lastUpdatedStr.strip():
+                eventType = EventType(sectorName, lastUpdatedStr.strip())
+                db.session.add(eventType)
+                db.session.commit()
 
 def find_nth(haystack, needle, n):
     start = haystack.find(needle)
@@ -135,25 +236,6 @@ def find_nth(haystack, needle, n):
         n -= 1
     return start
 
-# def pdfToText():
-#     FILE_PATH = 'cinemasadvisory2.pdf'
-#
-#     with open(FILE_PATH, mode='rb') as f:
-#         reader = PyPDF2.PdfFileReader(f)
-#         page = reader.getPage(0)
-#         print(page.extractText())
-
-# def smmrize(text):
-#     print(text)
-#     smmrizeHeader = {"Expect" : ""}
-#     data = {"SM_API_KEY" : "<apikey>", "SM_API_INPUT" : text, "SM_LENGTH" : 7}
-#     try: response = requests.get('https://api.smmry.com', data = data, headers = smmrizeHeader, timeout = 15)
-#     except: 
-#         print('fail')
-#         return
-#     print(response.text)
-
-
 # limited to 20000 requests a month, $0.01 aft that
 def meaningCloudSummarizer(text):
     # print(f'Original text: {text}.')
@@ -161,7 +243,6 @@ def meaningCloudSummarizer(text):
     print(f'Number of Sentences initially: {numSentences}')
     url = "https://meaningcloud-summarization-v1.p.rapidapi.com/summarization-1.0"
     querystring = {"sentences": "10", "txt": text}
-    # print("SMMRIZE_API_KEY", os.environ.get('SMMRIZE_API_KEY'))
     smmrizeHeaders = {
         'accept': "application/json",
         'x-rapidapi-host': "meaningcloud-summarization-v1.p.rapidapi.com",
@@ -187,7 +268,3 @@ def meaningCloudSummarizer(text):
         pass
     # print(response.text)
     return summarizedText.replace('[...] ', '')
-
-
-# if __name__ == '__main__':
-    # response = requests.get("https://www.sgpc.gov.sg/?agency=MOM")
