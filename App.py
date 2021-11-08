@@ -9,6 +9,16 @@ def default_route():
     # the homepage redirects to our API Developer Documentation page
     return redirect("https://dev.locus.social/")
 
+class Article(db.Model):
+    __tablename__='articles'
+
+    id = db.Column(db.Integer, primary_key=True)
+    description = db.Column(db.Text)
+    datePosted = db.Column(db.Date)
+    bodyText = db.Column(db.Text)
+    minutesToRead = db.Column(db.Integer)
+
+
 logger = logging.getLogger()
 handler = logging.StreamHandler()
 formatter = logging.Formatter(

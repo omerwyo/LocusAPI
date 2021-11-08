@@ -228,7 +228,6 @@ def checkTags():
                 eventType = EventType(sectorName, lastUpdatedStr.strip())
                 db.session.add(eventType)
                 db.session.commit()
-
 def find_nth(haystack, needle, n):
     start = haystack.find(needle)
     while start >= 0 and n > 1:
@@ -268,3 +267,4 @@ def meaningCloudSummarizer(text):
         pass
     # print(response.text)
     return summarizedText.replace('[...] ', '')
+
