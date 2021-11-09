@@ -45,7 +45,6 @@ def adminPut():
     article.datePublished = datetime.datetime.now()
 
     db.session.commit()
-
     return jsonify({'message': 'Article updated successfully.'}), 200
 
 @app.route('/admin/delete', methods=['DELETE'])

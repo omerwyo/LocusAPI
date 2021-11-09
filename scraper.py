@@ -20,7 +20,7 @@ import time
 scheduler = APScheduler()
 
 # @scheduler.task("interval", id="wrapper", hours=4, misfire_grace_time=900)
-@scheduler.task("cron", id="wrapper", hour='9', minute='23')
+@scheduler.task("cron", id="wrapper", hour='9', minute='35')
 def wrapperTask():
     parseMOHFeed()
     time.sleep(5)
@@ -162,6 +162,7 @@ def checkTags():
                   'Marriage solemnisations and wedding receptions', 'MICE events', 'Nightlife Establishments (Pivoted)',
                   'Property show galleries', 'Public entertainment', 'Religious organisations',
                   'Sports sector enterprises, sports education, and premises with sports facilities', 'Tours']
+    postList = []
     for num in range(1, 42):
         sectorContent = root.xpath(f'//*[@id="main-content"]/section[3]/div/div/div[2]/div/div/div/ul/li[{num}]')
         text = sectorContent[0].text_content()
@@ -179,14 +180,17 @@ def checkTags():
             if checker is not None and checker.currString != lastUpdatedStr.strip():
                 checker.currString = lastUpdatedStr.strip()
                 # Append to a Post request list
+                postList.append(lastUpdatedStr.strip())
 
                 db.session.commit()
             if checker is None:
                 newEventType = EventType(sectorName, lastUpdatedStr.strip())
                 db.session.add(newEventType)
                 db.session.commit()
+
     # Make the post request
-    req = requests.post("")
+    if postList:
+        r  = requests.post("https://locus.social:8080/event/type/notification", json={'eventTypes': postList})
 
 def find_nth(haystack, needle, n):
     start = haystack.find(needle)
