@@ -10,7 +10,7 @@ from scraper import parseMOHFeed, gov_sg_api_scrape, checkTags
 scheduler = APScheduler()
 db = SQLAlchemy()
 
-@scheduler.task("cron", id="wrapper", hour='10', minute='34')
+@scheduler.task("cron", id="wrapper", hour='10', minute='37')
 def wrapperTask():
     parseMOHFeed()
     time.sleep(5)
