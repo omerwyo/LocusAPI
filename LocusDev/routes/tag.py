@@ -14,6 +14,7 @@ def dailyUpdates():
     data = request.get_json()
     logging.info("data sent for evaluation {}".format(data))
     # result = parseMOHFeed()
+    print("CHECK FOR PROBLEM")
     entities = Article.query.order_by(desc(Article.time)).all()
     print("ENTITIES")
     logging.info('RETURNING DB STUFF WORKS')
