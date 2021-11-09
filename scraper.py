@@ -13,25 +13,14 @@ import requests
 import os
 import feedparser
 import lxml.html as lh
-from flask_apscheduler import APScheduler
 
 from App import db
 # from models import db, Article, EventType
 from models import Article, EventType
 import time
 
-scheduler = APScheduler()
 
 # @scheduler.task("interval", id="wrapper", hours=4, misfire_grace_time=900)
-@scheduler.task("cron", id="wrapper", hour='10', minute='28')
-def wrapperTask():
-    parseMOHFeed()
-    time.sleep(5)
-    gov_sg_api_scrape()
-    time.sleep(5)
-    checkTags()
-    time.sleep(2)
-    return
 
 def parseMOHFeed():
     NewsFeed = feedparser.parse("https://www.moh.gov.sg/feeds/news-highlights")
