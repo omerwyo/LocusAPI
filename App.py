@@ -93,7 +93,7 @@ def adminPut():
     db.session.commit()
     return jsonify({'message': 'Article updated successfully.'}), 200
 
-@app.route('/admin/delete', methods=['DELETE'])
+@app.route('/admin', methods=['DELETE'])
 def adminDelete():
     if not request.args.get('API_KEY') or request.args.get('API_KEY') != os.environ.get('LOCUS_API_KEY'): return jsonify({'message': 'Please use a valid API Key!'}), 401
     if not request.args.get('articleId'): return jsonify({'message': 'Please specify an articleId to delete!'}), 400
