@@ -5,7 +5,7 @@ import os
 from models import db
 
 app = Flask(__name__)
-db.init_app()
+db.init_app(app)
 
 app.config['DATABASE_URL'] =  os.environ.get('DATABASE_URL')
 # app.config['DATABASE_URL'] = 'sqlite:///users.sqlite3'
