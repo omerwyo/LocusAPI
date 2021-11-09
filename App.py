@@ -67,7 +67,7 @@ def adminNew():
                          datePublished=datetime.datetime.now(),
                          description="")
     if data['articleLink']: newArticle.articleId = data['articleLink']
-    if data['articleDescription']: newArticle.description = data['articleDescription']
+    # if data['articleDescription']: newArticle.description = data['articleDescription']
 
     db.session.add(newArticle)
     db.session.commit()
