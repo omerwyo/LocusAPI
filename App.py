@@ -7,6 +7,7 @@ from sqlalchemy import desc
 from models import Article
 from scraper import parseMOHFeed, gov_sg_api_scrape, checkTags
 from models import setup_db, db_drop_and_create_all
+from flask_cors import CORS
 import os
 import datetime
 
@@ -15,6 +16,8 @@ scheduler = APScheduler()
 def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__)
+    CORS(app)
+
     setup_db(app)
     """ uncomment at the first time running the app """
     # db_drop_and_create_all()
