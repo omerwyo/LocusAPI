@@ -73,9 +73,7 @@ def adminNew():
     db.session.commit()
 
     logging.info("Data sent for evaluation {}".format(data))
-    result = ""
-    logging.info("My result :{}".format(result))
-    return json.dumps(result)
+    return jsonify({'message': 'Article Created successfully.'}), 200
 
 @app.route('/admin/update', methods=['PUT'])
 def adminPut():
