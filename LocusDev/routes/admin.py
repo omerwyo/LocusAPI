@@ -5,8 +5,8 @@ from flask import request, jsonify
 import os
 from models import Article
 
-# from models import db
-from App import db, app
+from models import db
+from App import app
 
 logger = logging.getLogger(__name__)
 

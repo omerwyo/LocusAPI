@@ -1,16 +1,33 @@
 import logging
-from flask import Flask, redirect
+from flask import Flask, redirect, abort, jsonify
 from flask_apscheduler import APScheduler
-import os
 import time
 # from models import db
-from flask_sqlalchemy import SQLAlchemy
 from scraper import parseMOHFeed, gov_sg_api_scrape, checkTags
+from models import setup_db, db_drop_and_create_all
 
 scheduler = APScheduler()
-db = SQLAlchemy()
 
-@scheduler.task("cron", id="wrapper", hour='10', minute='37')
+def create_app(test_config=None):
+    # create and configure the app
+    app = Flask(__name__)
+    setup_db(app)
+    """ uncomment at the first time running the app """
+    db_drop_and_create_all()
+
+    # @app.errorhandler(500)
+    # def server_error(error):
+    #     return jsonify({
+    #         "success": False,
+    #         "error": 500,
+    #         "message": "server error"
+    #     }), 500
+
+    return app
+
+app = create_app()
+
+@scheduler.task("cron", id="wrapper", hour='10', minute='50')
 def wrapperTask():
     parseMOHFeed()
     time.sleep(5)
@@ -20,21 +37,12 @@ def wrapperTask():
     time.sleep(2)
     return
 
-app = Flask(__name__)
-
-app.config['SQLALCHEMY_DATABASE_URI'] =  'postgresql://' + os.environ.get('DATABASE_URL')[len('postgresql/'):]
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-db.init_app(app)
-with app.app_context():
-    db.create_all()
-
-logger = logging.getLogger(__name__)
 @app.route('/', methods=['GET'])
 def default_route():
     # the homepage redirects to our API Developer Documentation page
     return redirect("https://dev.locus.social/")
 
+logger = logging.getLogger(__name__)
 logger = logging.getLogger()
 handler = logging.StreamHandler()
 formatter = logging.Formatter(

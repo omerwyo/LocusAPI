@@ -14,13 +14,11 @@ import os
 import feedparser
 import lxml.html as lh
 
-from App import db
-# from models import db, Article, EventType
-from models import Article, EventType
+# from models import db
+from models import db, Article, EventType
+# from models import Article, EventType
 import time
 
-
-# @scheduler.task("interval", id="wrapper", hours=4, misfire_grace_time=900)
 
 def parseMOHFeed():
     NewsFeed = feedparser.parse("https://www.moh.gov.sg/feeds/news-highlights")
