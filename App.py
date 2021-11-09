@@ -1,8 +1,9 @@
 import logging
-from flask import Flask, redirect, abort, jsonify
+from flask import Flask, redirect, abort, request, jsonify
 from flask_apscheduler import APScheduler
 import time
 # from models import db
+from models import Article
 from scraper import parseMOHFeed, gov_sg_api_scrape, checkTags
 from models import setup_db, db_drop_and_create_all
 
@@ -36,6 +37,18 @@ def wrapperTask():
     checkTags()
     time.sleep(2)
     return
+
+@app.route('/v1/daily', methods=['GET'])
+def dailyUpdates():
+    data = request.get_json()
+    logging.info("data sent for evaluation {}".format(data))
+    # result = parseMOHFeed()
+    print("CHECK FOR PROBLEM")
+    entities = Article.query.order_by(desc(Article.time)).all()
+    print("ENTITIES")
+    logging.info('RETURNING DB STUFF WORKS')
+    # logging.info("My result :{}".format(result))
+    return jsonify(json_list = entities)
 
 @app.route('/', methods=['GET'])
 def default_route():
