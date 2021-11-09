@@ -23,7 +23,7 @@ import time
 scheduler = APScheduler()
 
 # @scheduler.task("interval", id="wrapper", hours=4, misfire_grace_time=900)
-@scheduler.task("cron", id="wrapper", hour=8, minute=42)
+@scheduler.task("cron", id="wrapper", hour=9, minute=03)
 def wrapperTask():
     parseMOHFeed()
     time.sleep(5)
@@ -182,12 +182,14 @@ def checkTags():
             if checker is not None and checker.currString != lastUpdatedStr.strip():
                 checker.currString = lastUpdatedStr.strip()
                 # Append to a Post request list
+
                 db.session.commit()
             if checker is None:
                 newEventType = EventType(sectorName, lastUpdatedStr.strip())
                 db.session.add(newEventType)
                 db.session.commit()
     # Make the post request
+    req = requests.post("")
 
 def find_nth(haystack, needle, n):
     start = haystack.find(needle)

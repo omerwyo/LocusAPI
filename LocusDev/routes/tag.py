@@ -12,9 +12,10 @@ logger = logging.getLogger(__name__)
 def dailyUpdates():
     data = request.get_json()
     logging.info("data sent for evaluation {}".format(data))
-    result = parseMOHFeed()
+    # result = parseMOHFeed()
     entities = Article.query.order_by(desc(Article.time)).all()
-    logging.info("My result :{}".format(result))
+    logging.info('RETURNING DB STUFF WORKS')
+    # logging.info("My result :{}".format(result))
     return jsonify(json_list = entities)
 
 # @app.route('/v1/govpress', methods=['GET'])

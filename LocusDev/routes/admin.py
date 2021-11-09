@@ -4,7 +4,7 @@ import logging
 from flask import request, jsonify
 import os
 from scraper import Article
-from LocusDev import app, db
+from models import db
 
 logger = logging.getLogger(__name__)
 
