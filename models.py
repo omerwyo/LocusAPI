@@ -44,7 +44,7 @@ class Article(db.Model):
         self.bodyText = bodyText
 
     def __repr__(self):
-        return '<Article Link %r : %r>' % self.articleId, self.datePosted
+        return 'Article Link(' + self.articleId + ',' + str(self.title) + ',' + str(self.description) + ',' + str(self.datePublished) + ',' + str(self.bodyText) + ')'
 
     @property
     def serialize(self):

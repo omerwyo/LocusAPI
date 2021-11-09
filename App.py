@@ -47,11 +47,10 @@ def dailyUpdates():
     print("CHECK FOR PROBLEM")
     # entities = Article.query.order_by(desc(Article.datePublished)).all()
     entities = Article.query.all()
-    print(entities)
     print("ENTITIES")
     logging.info('RETURNING DB STUFF WORKS')
     # logging.info("My result :{}".format(result))
-    response = jsonify(json_list=[e.serialize() for e in entities])
+    response = jsonify(json_list=[e.serialize for e in entities])
     return response
 
 @app.route('/', methods=['GET'])
