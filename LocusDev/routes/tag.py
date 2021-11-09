@@ -15,6 +15,7 @@ def dailyUpdates():
     logging.info("data sent for evaluation {}".format(data))
     # result = parseMOHFeed()
     entities = Article.query.order_by(desc(Article.time)).all()
+    print("ENTITIES")
     logging.info('RETURNING DB STUFF WORKS')
     # logging.info("My result :{}".format(result))
     return jsonify(json_list = entities)
