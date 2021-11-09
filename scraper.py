@@ -1,14 +1,3 @@
-# 3. scrapes gov.sg press releases for latest press releases on the following topics (parse http)
-# https://www.sgpc.gov.sg/
-# - MSE - They order businesses to close down when breaching measures, issue advisories on COVID
-# - STB - Tourism Industry related news
-# - MTI -
-
-
-# 4. scrapes MOH Press Releases for current state (parse http)
-# https://www.moh.gov.sg/covid-19-phase-advisory - Current Phase Updates summarised
-# https://www.moh.gov.sg/covid-19 - Similar to the above
-
 import requests
 import os
 import feedparser
@@ -30,18 +19,13 @@ def parseMOHFeed():
             text = lh.fromstring(text).text_content().replace('\xa0', ' ').replace('·', '')
             if text.startswith('Summary'):
                 text = text[len("Summary of local situation"):].strip()
-
-            print('DEBUG CHECK')
             checker = Article.query.filter_by(articleId=article.link).first()
             if checker is not None: break
-
             datePublished = (article.published).strip().replace(',', '')[:-2]
 
             # Thu 14 Oct 2021 15:30:00
             datePublishedObj = datetime.strptime(f'{datePublished}', '%a %d %b %Y %X')
             print(datePublishedObj.isoformat())
-
-            # print(f'DatePublished parseMOHFeed : {datePublishedObj}')
 
             article = Article(articleId=article.link, # link serves as the id of the article
                           title=article.title,
@@ -155,7 +139,8 @@ def checkTags():
         return
     root = lh.fromstring(response.text)
     # TODO: find len 'jekyllcodex_accordion', replace with 42
-    SectorList = ['Attractions',
+    SectorList = [
+    'Attractions',
     'Country and recreation clubs',
     'Funeral events',
     'Marriage solemnisations and wedding receptions',
@@ -239,4 +224,3 @@ def meaningCloudSummarizer(text):
         pass
     # print(response.text)
     return summarizedText.replace('[...] ', '')
-

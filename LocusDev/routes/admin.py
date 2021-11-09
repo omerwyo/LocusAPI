@@ -1,14 +1,13 @@
-import datetime
-import json
-import logging
-from flask import request, jsonify
-import os
-from models import Article
+# import datetime
+# import json
+# import logging
+# from flask import request, jsonify
+# import os
+# from models import Article
+# from models import db
+# from App import app
 
-from models import db
-from App import app
-
-logger = logging.getLogger(__name__)
+# logger = logging.getLogger(__name__)
 #
 # # add some sort of authorisation, where the API key is needed for administrators to post up info
 # @app.route('/admin', methods=['POST'])
