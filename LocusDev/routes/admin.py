@@ -16,9 +16,9 @@ def adminNew():
     if not request.args.get('API_KEY') or request.args.get('API_KEY') != os.environ.get('LOCUS_API_KEY'): return jsonify({'message':'Please use a valid API Key!'}), 401
     data = request.get_json()
     newArticle = Article(articleId= data['articleLink'],
-                         title=data['articleLink'],
-                         bodyText=data['articleLink'],
-                         datePublished=data['articleLink'],
+                         title=data['title'],
+                         bodyText=data['bodyText'],
+                         datePublished=datetime.datetime.now(),
                          description="")
     if data['articleLink']: newArticle.articleId = data['articleLink']
     if data['articleDescription']: newArticle.description = data['articleDescription']
@@ -41,10 +41,10 @@ def adminPut():
 
     data = request.get_json()
     article.title = data['title']
-    article.bodyText = data['title']
-    article.datePosted = data['articleLink']
+    article.bodyText = data['bodyText']
+    article.articleId = data['articleLink']
+    # article.datePublished = data['articleLink']
     # article.description = data['description']
-    article.datePublished = datetime.datetime.now()
 
     db.session.commit()
     return jsonify({'message': 'Article updated successfully.'}), 200
@@ -53,3 +53,9 @@ def adminPut():
 def adminDelete():
     if not request.args.get('API_KEY') or request.args.get('API_KEY') != os.environ.get('LOCUS_API_KEY'): return jsonify({'message': 'Please use a valid API Key!'}), 401
     if not request.args.get('articleId'): return jsonify({'message': 'Please specify an articleId to delete!'}), 400
+
+    article = Article.query.filter_by(articleId=request.args.get('articleId').strip()).first()
+    db.session.delete(article)
+    db.session.commit()
+
+    return jsonify({'message': 'Article deleted successfully.'}), 200
