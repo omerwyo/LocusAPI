@@ -15,7 +15,7 @@ def create_app(test_config=None):
     app = Flask(__name__)
     setup_db(app)
     """ uncomment at the first time running the app """
-    db_drop_and_create_all()
+    # db_drop_and_create_all()
 
     # @app.errorhandler(500)
     # def server_error(error):
@@ -47,6 +47,8 @@ def dailyUpdates():
     print("CHECK FOR PROBLEM")
     # entities = Article.query.order_by(desc(Article.datePublished)).all()
     entities = Article.query.all()
+    print(entities)
+    print(type(entities))
     print("ENTITIES")
     logging.info('RETURNING DB STUFF WORKS')
     # logging.info("My result :{}".format(result))
