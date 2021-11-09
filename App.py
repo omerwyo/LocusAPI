@@ -2,9 +2,10 @@ import logging
 from flask import Flask, redirect
 from flask_apscheduler import APScheduler
 import os
+import time
 # from models import db
 from flask_sqlalchemy import SQLAlchemy
-from scraper import *
+from scraper import parseMOHFeed, gov_sg_api_scrape, checkTags
 
 scheduler = APScheduler()
 db = SQLAlchemy()
