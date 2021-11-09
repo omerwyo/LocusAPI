@@ -107,7 +107,6 @@ def adminDelete():
 
     return jsonify({'message': 'Article deleted successfully.'}), 200
 
-
 @app.route('/', methods=['GET'])
 def default_route():
     # the homepage redirects to our API Developer Documentation page
@@ -123,7 +122,6 @@ logger.addHandler(handler)
 logger.setLevel(logging.INFO)
 
 if __name__ == "__main__":
-
     # our scheduler function goes here:
     scheduler.start()
     logging.info("Starting application ...")
