@@ -2,7 +2,10 @@ import logging
 from flask import Flask, redirect
 from scraper import scheduler
 import os
-from models import db
+# from models import db
+
+from flask_sqlalchemy import SQLAlchemy
+db = SQLAlchemy()
 
 app = Flask(__name__)
 

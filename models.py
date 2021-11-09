@@ -1,5 +1,5 @@
-from flask_sqlalchemy import SQLAlchemy
-db = SQLAlchemy()
+# from flask_sqlalchemy import SQLAlchemy
+# db = SQLAlchemy()
 
 def dump_datetime(value):
     """Deserialize datetime object into string form for JSON processing."""
