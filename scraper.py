@@ -109,7 +109,7 @@ def gov_sg_api_scrape():
         datePublished = article['publishdate_s']
 
         # Example : 06 Aug 2021
-        datePublishedObj = datetime.strptime(f'{datePublished} 0:01AM', '%d %b %Y %I:%M%p')
+        datePublishedObj = datetime.strptime(f'{datePublished} 00:01AM', '%d %b %Y %I:%M%p')
         print(f'DatePublished gov_sg_api_scrape : {datePublishedObj.isoformat()}')
 
         # nCount = find_nth(articleMainText, '. ', articleMainText.count('. ') * 0.3)
