@@ -24,7 +24,8 @@ def dump_datetime(value):
     """Deserialize datetime object into string form for JSON processing."""
     if value is None:
         return None
-    return value.isoformat()
+    return value.strftime("%d %b %Y, %H:%M")
+    # return value.isoformat()
 
 class Article(db.Model):
     __tablename__='articles'
