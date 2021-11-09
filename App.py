@@ -1,7 +1,17 @@
 import logging
 from LocusDev import app, db
-from flask import redirect
+from flask import Flask, redirect
 from scraper import scheduler
+import os
+from models import db
+
+app = Flask(__name__)
+db.init_app()
+
+app.config['DATABASE_URL'] =  os.environ.get('DATABASE_URL')
+# app.config['DATABASE_URL'] = 'sqlite:///users.sqlite3'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 
 logger = logging.getLogger(__name__)
 @app.route('/', methods=['GET'])
@@ -19,9 +29,7 @@ logger.setLevel(logging.INFO)
 
 if __name__ == "__main__":
 
-    # our scheduler function goes here: 
+    # our scheduler function goes here:
     scheduler.start()
-
     logging.info("Starting application ...")
-    db.create_all()
     app.run(debug=False, port=33507)

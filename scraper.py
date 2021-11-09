@@ -13,71 +13,14 @@ import requests
 import os
 import feedparser
 import lxml.html as lh
+from flask import Flask
 from flask_apscheduler import APScheduler
 from LocusDev import db
+from App import scheduler
+from models import db, Article, EventType
 import time
 
 scheduler = APScheduler()
-
-def dump_datetime(value):
-    """Deserialize datetime object into string form for JSON processing."""
-    if value is None:
-        return None
-    return value.isoformat()
-
-class Article(db.Model):
-    __tablename__='articles'
-
-    id = db.Column(db.Integer, primary_key=True)
-    articleId = db.Column(db.String, unique=True)
-    title = db.Column(db.String)
-    description = db.Column(db.Text)
-    datePublished = db.Column(db.DateTime)
-    bodyText = db.Column(db.Text)
-
-    def __init__(self, articleId, title, description, datePublished, bodyText):
-        self.articleId = articleId
-        self.title = title
-        self.description = description
-        self.datePublished = datePublished
-        self.bodyText = bodyText
-
-    def __repr__(self):
-        return '<Article Link %r : %r>' % self.articleId, self.datePosted
-
-    @property
-    def serialize(self):
-        """Return object data in easily serializable format"""
-        return {
-            'articleId': self.id,
-            'title': self.title,
-            'description': self.description,
-            'datePosted': dump_datetime(self.datePosted),
-            'bodyText': self.bodyText
-        }
-
-class EventType(db.Model):
-    __tablename__ = 'tags'
-
-    id = db.Column(db.Integer, primary_key=True)
-    eventTypeName = db.Column(db.String, unique=True)
-    currString = db.Column(db.String)
-
-    def __init__(self, tagName, currString):
-        self.eventTypeName = tagName
-        self.currString = currString
-
-    def __repr__(self):
-        return '<Event Type %s : %s>' % self.eventTypeName, self.currString
-
-    @property
-    def serialize(self):
-        """Return object data in easily serializable format"""
-        return {
-            'id': self.id,
-            'eventTypeName': self.eventTypeName,
-            'currString': self.currString,
-        }
 
 # @scheduler.task("interval", id="wrapper", hours=4, misfire_grace_time=900)
 @scheduler.task("cron", id="wrapper", hour=16, minute=32)
@@ -95,7 +38,7 @@ def parseMOHFeed():
     outputList = []
     for article in NewsFeed.entries:
         if article.title.lower().strip().startswith('update on local covid-19 situation'):
-            ddict = {}
+            # ddict = {}
             text = article.description[ article.description.lower().find('summary') : article.description.lower().find('<strong>', article.description.lower().find('summary')) ]
             text = lh.fromstring(text).text_content().replace('\xa0', ' ').replace('·', '')
             if text.startswith('Summary'):
@@ -103,6 +46,8 @@ def parseMOHFeed():
 
             checker = Article.query.filter_by(articleId=article.link).first()
             if checker is not None: break
+
+            print(f'DatePublished gov_sg_aparseMOHFeedpi_scrape : {article.published}')
 
             article = Article(articleId=article.link, # link serves as the id of the article
                           title=article.title,
@@ -167,6 +112,8 @@ def gov_sg_api_scrape():
         except: articleDescription = ""
         articleID = article['itemid_s']
         articleMainText = article['bodytext_t']
+
+        print(f'DatePublished gov_sg_api_scrape : {datePublished}')
 
         # nCount = find_nth(articleMainText, '. ', articleMainText.count('. ') * 0.3)
         # articleSummarized = meaningCloudSummarizer(articleMainText)
