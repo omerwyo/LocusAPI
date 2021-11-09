@@ -48,7 +48,6 @@ def dailyUpdates():
     # entities = Article.query.order_by(desc(Article.datePublished)).all()
     entities = Article.query.all()
     print(entities)
-    print(type(entities))
     print("ENTITIES")
     logging.info('RETURNING DB STUFF WORKS')
     # logging.info("My result :{}".format(result))
