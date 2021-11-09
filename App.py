@@ -7,6 +7,7 @@ from sqlalchemy import desc
 from models import Article
 from scraper import parseMOHFeed, gov_sg_api_scrape, checkTags
 from models import setup_db, db_drop_and_create_all
+import os
 
 scheduler = APScheduler()
 
