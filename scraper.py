@@ -146,10 +146,21 @@ def checkTags():
         return
     root = lh.fromstring(response.text)
     # TODO: find len 'jekyllcodex_accordion', replace with 42
-    SectorList = ['Attractions', 'Country and recreation clubs', 'Finance', 'Funeral events', 'F&B', 'Hotels',
-                  'Marriage solemnisations and wedding receptions', 'MICE events', 'Nightlife Establishments (Pivoted)',
-                  'Property show galleries', 'Public entertainment', 'Religious organisations',
-                  'Sports sector enterprises, sports education, and premises with sports facilities', 'Tours']
+    SectorList = ['Attractions',
+    'Country and recreation clubs',
+    'Funeral events',
+    'Marriage solemnisations and wedding receptions',
+    'MICE events',
+    'Hotels',
+    'Property show galleries',
+    'Sports sector enterprises, sports education, and premises with sports facilities',
+    'Religious organisations']
+
+        # ['Attractions', 'Country and recreation clubs', 'Finance', 'Funeral events', 'F&B', 'Hotels',
+        #           'Marriage solemnisations and wedding receptions', 'MICE events', 'Nightlife Establishments (Pivoted)',
+        #           'Property show galleries', 'Public entertainment', 'Religious organisations',
+        #           'Sports sector enterprises, sports education, and premises with sports facilities', 'Tours']
+
     postList = []
     for num in range(1, 42):
         sectorContent = root.xpath(f'//*[@id="main-content"]/section[3]/div/div/div[2]/div/div/div/ul/li[{num}]')

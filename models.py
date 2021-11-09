@@ -53,7 +53,7 @@ class Article(db.Model):
             'articleId': self.id,
             'title': self.title,
             'description': self.description,
-            'datePosted': dump_datetime(self.datePosted),
+            'datePublished': dump_datetime(self.datePublished),
             'bodyText': self.bodyText
         }
 
