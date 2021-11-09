@@ -5,14 +5,15 @@ import os
 from models import db
 
 app = Flask(__name__)
-db.init_app(app)
-
-with app.app_context():
-    db.create_all()
 
 app.config['DATABASE_URL'] =  os.environ.get('DATABASE_URL')
 # app.config['DATABASE_URL'] = 'sqlite:///users.sqlite3'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db.init_app(app)
+with app.app_context():
+    db.create_all()
+
 
 
 logger = logging.getLogger(__name__)
