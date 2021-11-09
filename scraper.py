@@ -20,7 +20,7 @@ import time
 scheduler = APScheduler()
 
 # @scheduler.task("interval", id="wrapper", hours=4, misfire_grace_time=900)
-@scheduler.task("cron", id="wrapper", hour='9', minute='53')
+@scheduler.task("cron", id="wrapper", hour='10', minute='04')
 def wrapperTask():
     parseMOHFeed()
     time.sleep(5)
@@ -41,6 +41,7 @@ def parseMOHFeed():
             if text.startswith('Summary'):
                 text = text[len("Summary of local situation"):].strip()
 
+            print('DEBUG CHECK')
             checker = Article.query.filter_by(articleId=article.link).first()
             if checker is not None: break
 
