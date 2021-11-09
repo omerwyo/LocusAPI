@@ -15,7 +15,7 @@ def create_app(test_config=None):
     app = Flask(__name__)
     setup_db(app)
     """ uncomment at the first time running the app """
-    # db_drop_and_create_all()
+    db_drop_and_create_all()
 
     # @app.errorhandler(500)
     # def server_error(error):
@@ -29,7 +29,7 @@ def create_app(test_config=None):
 
 app = create_app()
 
-@scheduler.task("cron", id="wrapper", hour='14', minute='23')
+@scheduler.task("cron", id="wrapper", hour='14', minute='39')
 def wrapperTask():
     parseMOHFeed()
     time.sleep(5)
