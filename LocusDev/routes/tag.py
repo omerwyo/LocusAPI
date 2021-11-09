@@ -1,10 +1,11 @@
 import logging
 import json
 from flask import request, jsonify
-from scraper import parseMOHFeed, gov_sg_api_scrape, Article
+from scraper import parseMOHFeed, gov_sg_api_scrape
+from models import Article
 from sqlalchemy import desc
 
-from LocusDev import app
+from App import app
 
 logger = logging.getLogger(__name__)
 

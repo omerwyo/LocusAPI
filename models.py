@@ -1,6 +1,8 @@
 # from flask_sqlalchemy import SQLAlchemy
 # db = SQLAlchemy()
 
+from App import db
+
 def dump_datetime(value):
     """Deserialize datetime object into string form for JSON processing."""
     if value is None:

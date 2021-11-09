@@ -3,8 +3,10 @@ import json
 import logging
 from flask import request, jsonify
 import os
-from scraper import Article
-from models import db
+from models import Article
+
+# from models import db
+from App import db, app
 
 logger = logging.getLogger(__name__)
 
