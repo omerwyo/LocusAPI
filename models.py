@@ -51,7 +51,7 @@ class Article(db.Model):
     def serialize(self):
         """Return object data in easily serializable format"""
         return {
-            'articleId': self.id,
+            'articleId': self.articleId,
             'title': self.title,
             'description': self.description,
             'datePublished': dump_datetime(self.datePublished),
