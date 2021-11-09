@@ -13,17 +13,15 @@ import requests
 import os
 import feedparser
 import lxml.html as lh
-from flask import Flask
 from flask_apscheduler import APScheduler
 from LocusDev import db
-from App import scheduler
 from models import db, Article, EventType
 import time
 
 scheduler = APScheduler()
 
 # @scheduler.task("interval", id="wrapper", hours=4, misfire_grace_time=900)
-@scheduler.task("cron", id="wrapper", hour=9, minute=03)
+@scheduler.task("cron", id="wrapper", hour=9, minute=06)
 def wrapperTask():
     parseMOHFeed()
     time.sleep(5)
