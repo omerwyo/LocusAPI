@@ -82,9 +82,9 @@ def gov_sg_api_scrape():
     outputList = []
     for article in data['response']['docs']:
         ddict = {}
-        imgUrl = "www.gov.sg/" + article['imageurl_s']
+        imgUrl = "https://www.gov.sg/" + article['imageurl_s']
         minutesToRead = article['minuteread_s']
-        articleUrl = "www.gov.sg/" + article['pageurl_s']
+        articleUrl = "https://www.gov.sg/" + article['pageurl_s']
         articleTitle = article['title_t']
         try: articleDescription = article['short_description_t']
         except: articleDescription = ""
