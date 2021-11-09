@@ -19,7 +19,6 @@ from models import db, Article, EventType
 # from models import Article, EventType
 import time
 
-
 def parseMOHFeed():
     NewsFeed = feedparser.parse("https://www.moh.gov.sg/feeds/news-highlights")
     outputList = []
@@ -35,7 +34,7 @@ def parseMOHFeed():
             checker = Article.query.filter_by(articleId=article.link).first()
             if checker is not None: break
 
-            print(f'DatePublished gov_sg_aparseMOHFeedpi_scrape : {article.published}')
+            print(f'DatePublished parseMOHFeedpi_scrape : {article.published}')
 
             article = Article(articleId=article.link, # link serves as the id of the article
                           title=article.title,
@@ -88,7 +87,7 @@ def gov_sg_api_scrape():
     except:
         print('Json Issue')
         return
-    print("Total Num responses:", data['response']['docs'])
+    print("Total Num responses:", len(data['response']['docs']))
     outputList = []
     for article in data['response']['docs']:
         ddict = {}
@@ -100,14 +99,12 @@ def gov_sg_api_scrape():
         except: articleDescription = ""
         articleID = article['itemid_s']
         articleMainText = article['bodytext_t']
+        datePublished = article['publishdate_s']
 
         print(f'DatePublished gov_sg_api_scrape : {datePublished}')
 
         # nCount = find_nth(articleMainText, '. ', articleMainText.count('. ') * 0.3)
         # articleSummarized = meaningCloudSummarizer(articleMainText)
-
-        datePublished = article['publishdate_s']
-
         checker = Article.query.filter_by(articleId=articleUrl).first()
         if checker is not None: break
 
