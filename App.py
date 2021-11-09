@@ -1,11 +1,23 @@
 import logging
 from flask import Flask, redirect
-from scraper import scheduler
+from flask_apscheduler import APScheduler
 import os
 # from models import db
-
 from flask_sqlalchemy import SQLAlchemy
+from scraper import *
+
+scheduler = APScheduler()
 db = SQLAlchemy()
+
+@scheduler.task("cron", id="wrapper", hour='10', minute='34')
+def wrapperTask():
+    parseMOHFeed()
+    time.sleep(5)
+    gov_sg_api_scrape()
+    time.sleep(5)
+    checkTags()
+    time.sleep(2)
+    return
 
 app = Flask(__name__)
 
