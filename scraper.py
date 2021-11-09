@@ -32,14 +32,14 @@ class Article(db.Model):
     articleId = db.Column(db.String, unique=True)
     title = db.Column(db.String)
     description = db.Column(db.Text)
-    datePosted = db.Column(db.DateTime)
+    datePublished = db.Column(db.DateTime)
     bodyText = db.Column(db.Text)
 
-    def __init__(self, articleId, title, description, datePosted, bodyText):
+    def __init__(self, articleId, title, description, datePublished, bodyText):
         self.articleId = articleId
         self.title = title
         self.description = description
-        self.datePosted = datePosted
+        self.datePublished = datePublished
         self.bodyText = bodyText
 
     def __repr__(self):
@@ -70,6 +70,15 @@ class EventType(db.Model):
     def __repr__(self):
         return '<Event Type %s : %s>' % self.eventTypeName, self.currString
 
+    @property
+    def serialize(self):
+        """Return object data in easily serializable format"""
+        return {
+            'id': self.id,
+            'eventTypeName': self.eventTypeName,
+            'currString': self.currString,
+        }
+
 # @scheduler.task("interval", id="wrapper", hours=4, misfire_grace_time=900)
 @scheduler.task("cron", id="wrapper", hour=16, minute=32)
 def wrapperTask():
@@ -99,7 +108,7 @@ def parseMOHFeed():
                           title=article.title,
                           bodyText=text,
                           datePublished=article.published,
-                          description=article.link)
+                          description="")
             db.session.add(article)
             db.session.commit()
     return outputList
@@ -222,12 +231,17 @@ def checkTags():
                 lastUpdatedStr += text[text.find('[', check): text.find(']', check) + 1]
                 text = text[text.find(']', check):]
                 check = text.find('[')
-
-            checker = EventType.query.filter_by(eventTypeName=lastUpdatedStr.strip()).first()
+            checker = EventType.query.filter_by(eventTypeName=sectorName.strip()).first()
             if checker is not None and checker.currString != lastUpdatedStr.strip():
-                eventType = EventType(sectorName, lastUpdatedStr.strip())
-                db.session.add(eventType)
+                checker.currString = lastUpdatedStr.strip()
+                # Append to a Post request list
                 db.session.commit()
+            if checker is None:
+                newEventType = EventType(sectorName, lastUpdatedStr.strip())
+                db.session.add(newEventType)
+                db.session.commit()
+    # Make the post request
+
 def find_nth(haystack, needle, n):
     start = haystack.find(needle)
     while start >= 0 and n > 1:
