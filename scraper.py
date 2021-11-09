@@ -20,7 +20,7 @@ import time
 scheduler = APScheduler()
 
 # @scheduler.task("interval", id="wrapper", hours=4, misfire_grace_time=900)
-@scheduler.task("cron", id="wrapper", hour='9', minute='35')
+@scheduler.task("cron", id="wrapper", hour='9', minute='37')
 def wrapperTask():
     parseMOHFeed()
     time.sleep(5)
