@@ -13,6 +13,7 @@ import requests
 import os
 import feedparser
 import lxml.html as lh
+from datetime import datetime
 
 # from models import db
 from models import db, Article, EventType
@@ -34,7 +35,13 @@ def parseMOHFeed():
             checker = Article.query.filter_by(articleId=article.link).first()
             if checker is not None: break
 
-            print(f'DatePublished parseMOHFeedpi_scrape : {article.published}')
+            datePublished = (article.published).strip().replace(',', '')[:-2]
+
+            # Thu 14 Oct 2021 15:30:00
+            datePublishedObj = datetime.strptime(f'{datePublished}', '%a %d %b %Y %X')
+            print(datePublishedObj.isoformat())
+
+            # print(f'DatePublished parseMOHFeed : {datePublishedObj}')
 
             article = Article(articleId=article.link, # link serves as the id of the article
                           title=article.title,
@@ -101,7 +108,9 @@ def gov_sg_api_scrape():
         articleMainText = article['bodytext_t']
         datePublished = article['publishdate_s']
 
-        print(f'DatePublished gov_sg_api_scrape : {datePublished}')
+        # Example : 06 Aug 2021
+        datePublishedObj = datetime.strptime(f'{datePublished}  0:01AM', '%d %b %Y %I:%M%p')
+        print(f'DatePublished gov_sg_api_scrape : {datePublishedObj.isoformat()}')
 
         # nCount = find_nth(articleMainText, '. ', articleMainText.count('. ') * 0.3)
         # articleSummarized = meaningCloudSummarizer(articleMainText)

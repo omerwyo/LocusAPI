@@ -29,7 +29,7 @@ def create_app(test_config=None):
 
 app = create_app()
 
-@scheduler.task("cron", id="wrapper", hour='13', minute='26')
+@scheduler.task("cron", id="wrapper", hour='14', minute='23')
 def wrapperTask():
     parseMOHFeed()
     time.sleep(5)
@@ -50,7 +50,8 @@ def dailyUpdates():
     print("ENTITIES")
     logging.info('RETURNING DB STUFF WORKS')
     # logging.info("My result :{}".format(result))
-    return jsonify(json_list = entities)
+    response = jsonify(json_list=[e.serialize() for e in entities])
+    return response
 
 @app.route('/', methods=['GET'])
 def default_route():
