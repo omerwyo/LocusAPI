@@ -27,7 +27,7 @@ def create_app(test_config=None):
 
 app = create_app()
 
-@scheduler.task("cron", id="wrapper", hour='10', minute='50')
+@scheduler.task("cron", id="wrapper", hour='10', minute='56')
 def wrapperTask():
     parseMOHFeed()
     time.sleep(5)
