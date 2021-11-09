@@ -1,5 +1,4 @@
 import logging
-from LocusDev import app, db
 from flask import Flask, redirect
 from scraper import scheduler
 import os
