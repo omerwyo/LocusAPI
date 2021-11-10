@@ -50,8 +50,10 @@ class Article(db.Model):
     @property
     def serialize(self):
         """Return object data in easily serializable format"""
+        idArticle = self.articleId
+        if idArticle.startswith('www.gov.sg') : idArticle = "https://" + idArticle
         return {
-            'articleId': self.articleId,
+            'articleId': idArticle,
             'title': self.title,
             'description': self.description,
             'datePublished': dump_datetime(self.datePublished),
