@@ -19,6 +19,7 @@ def parseMOHFeed():
             text = lh.fromstring(text).text_content().replace('\xa0', ' ').replace('·', '')
             if text.startswith('Summary'):
                 text = text[len("Summary of local situation"):].strip()
+            if len(text) < 10 : continue
             checker = Article.query.filter_by(articleId=article.link).first()
             if checker is not None: break
             datePublished = (article.published).strip().replace(',', '')[:-2]
