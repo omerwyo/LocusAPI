@@ -78,7 +78,7 @@ def adminNew():
     logging.info("Data sent for evaluation {}".format(data))
     return jsonify({'message': 'Article Created successfully.'}), 200
 
-@app.route('/admin/update', methods=['PUT'])
+@app.route('/admin', methods=['PUT'])
 def adminPut():
     if not request.args.get('API_KEY') or request.args.get('API_KEY') != os.environ.get('LOCUS_API_KEY'): return jsonify({'message': 'Please use a valid API Key!'}), 401
     if not request.args.get('articleId'): return jsonify({'message': 'Please specify an articleId to update!'}), 400
