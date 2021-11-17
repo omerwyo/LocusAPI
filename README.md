@@ -6,7 +6,10 @@ LocusAPI is a Public API to serve the latest guidelines on prevailing COVID-19 M
 
 LocusAPI came about as a complement to [Locus](https://locus.social/)
 
-Being a verified contributor to our ever-expanding Content Management System allows you to Add, Update and Delete Articles from the system
+## Where do I go to find out more?
+Visit https://dev.locus.social/ for the complete documentation of the API.
 
-If you'd like to apply for Contributer status, which will allow you to `POST`, `PUT`or `DELETE` news details you can contact us at locus.mails@gmail.com to begin the verification process.
+## How do I contribute?
+Being a verified contributor to our ever-expanding Content Management System allows you to Add, Update and Delete Articles from the system.
 
+If you'd like to apply for Contributor status, which will allow you to `POST`, `PUT`or `DELETE` news articles; you can contact us at locus.mails@gmail.com to begin the verification process!
