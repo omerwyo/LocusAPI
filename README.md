@@ -1,7 +1,12 @@
-LocusAPI is a public API to serve the latest guidelines on prevailing COVID-19 Measures, as well as the latest news - retrieved from a variety of reliable and official government sources. 
+# [LocusAPI](https://dev.locus.social/)
 
-LocusAPI came about as a complement to 
+![alt text](https://raw.githubusercontent.com/iPhantasmic/Locus/main/client/public/logo_white.png?token=ANR36DQCESIIH3KJSBT7FHDBTUN64 "Locus Logo")
 
-If you'd like to apply for admin status, which will allow you to `POST` news details, apply for verification and an API key at \*insert locus developer api page\*
+LocusAPI is a Public API to serve the latest guidelines on prevailing COVID-19 Measures, as well as the latest news - retrieved from a variety of reliable and official government sources. 
 
-.... \*more info to be inserted in API documentation later\* ...
+LocusAPI came about as a complement to [Locus](https://locus.social/)
+
+Being a verified contributor to our ever-expanding Content Management System allows you to Add, Update and Delete Articles from the system
+
+If you'd like to apply for Contributer status, which will allow you to `POST`, `PUT`or `DELETE` news details you can contact us at locus.mails@gmail.com to begin the verification process.
+
