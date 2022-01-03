@@ -1,13 +1,11 @@
 import requests
-import os
 import feedparser
 import lxml.html as lh
 from datetime import datetime
-
-# from models import db
 from models import db, Article, EventType
-# from models import Article, EventType
 import time
+import os
+
 
 def parseMOHFeed():
     NewsFeed = feedparser.parse("https://www.moh.gov.sg/feeds/news-highlights")
@@ -151,11 +149,6 @@ def checkTags():
     'Sports sector enterprises, sports education, and premises with sports facilities',
     'Religious organisations']
 
-        # ['Attractions', 'Country and recreation clubs', 'Finance', 'Funeral events', 'F&B', 'Hotels',
-        #           'Marriage solemnisations and wedding receptions', 'MICE events', 'Nightlife Establishments (Pivoted)',
-        #           'Property show galleries', 'Public entertainment', 'Religious organisations',
-        #           'Sports sector enterprises, sports education, and premises with sports facilities', 'Tours']
-
     postList = []
     for num in range(1, 42):
         sectorContent = root.xpath(f'//*[@id="main-content"]/section[3]/div/div/div[2]/div/div/div/ul/li[{num}]')
@@ -186,42 +179,42 @@ def checkTags():
     if postList:
         r  = requests.post("https://locus.social:8080/event/type/notification", json={'eventTypes': postList})
 
-def find_nth(haystack, needle, n):
-    start = haystack.find(needle)
-    while start >= 0 and n > 1:
-        start = haystack.find(needle, start + len(needle))
-        n -= 1
-    return start
+# def find_nth(haystack, needle, n):
+#     start = haystack.find(needle)
+#     while start >= 0 and n > 1:
+#         start = haystack.find(needle, start + len(needle))
+#         n -= 1
+#     return start
 
 # limited to 20000 requests a month, $0.01 aft that
-def meaningCloudSummarizer(text):
-    # print(f'Original text: {text}.')
-    numSentences = text.count('.')
-    print(f'Number of Sentences initially: {numSentences}')
-    url = "https://meaningcloud-summarization-v1.p.rapidapi.com/summarization-1.0"
-    querystring = {"sentences": "10", "txt": text}
-    smmrizeHeaders = {
-        'accept': "application/json",
-        'x-rapidapi-host': "meaningcloud-summarization-v1.p.rapidapi.com",
-        'x-rapidapi-key': os.environ.get('SMMRIZE_API_KEY')
-    }
-    try:
-        response = requests.request("GET", url, headers=smmrizeHeaders, params=querystring, timeout=15)
-    except requests.exceptions.Timeout:
-        return
-    if response.status_code != 200:
-        print(response.status_code)
-        return
-    try:
-        summaryJSON = response.json()
-    except ValueError:
-        print(response.text)
-        return
-    try:
-        summarizedText = summaryJSON["summary"]
-    except:
-        if response.text.find('"summary"') == -1: return
-        summarizedText = response.text[response.text.find('"summary"') + len("summary"): -2]
-        pass
-    # print(response.text)
-    return summarizedText.replace('[...] ', '')
+# def meaningCloudSummarizer(text):
+#     # print(f'Original text: {text}.')
+#     numSentences = text.count('.')
+#     print(f'Number of Sentences initially: {numSentences}')
+#     url = "https://meaningcloud-summarization-v1.p.rapidapi.com/summarization-1.0"
+#     querystring = {"sentences": "10", "txt": text}
+#     smmrizeHeaders = {
+#         'accept': "application/json",
+#         'x-rapidapi-host': "meaningcloud-summarization-v1.p.rapidapi.com",
+#         'x-rapidapi-key': os.environ.get('SMMRIZE_API_KEY')
+#     }
+#     try:
+#         response = requests.request("GET", url, headers=smmrizeHeaders, params=querystring, timeout=15)
+#     except requests.exceptions.Timeout:
+#         return
+#     if response.status_code != 200:
+#         print(response.status_code)
+#         return
+#     try:
+#         summaryJSON = response.json()
+#     except ValueError:
+#         print(response.text)
+#         return
+#     try:
+#         summarizedText = summaryJSON["summary"]
+#     except:
+#         if response.text.find('"summary"') == -1: return
+#         summarizedText = response.text[response.text.find('"summary"') + len("summary"): -2]
+#         pass
+#     # print(response.text)
+#     return summarizedText.replace('[...] ', '')

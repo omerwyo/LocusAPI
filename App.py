@@ -22,13 +22,13 @@ def create_app(test_config=None):
     """ uncomment at the first time running the app """
     # db_drop_and_create_all()
 
-    # @app.errorhandler(500)
-    # def server_error(error):
-    #     return jsonify({
-    #         "success": False,
-    #         "error": 500,
-    #         "message": "server error"
-    #     }), 500
+    @app.errorhandler(500)
+    def server_error(error):
+        return jsonify({
+            "success": False,
+            "error": 500,
+            "message": "server error"
+        }), 500
 
     return app
 
@@ -48,13 +48,7 @@ def wrapperTask():
 def dailyUpdates():
     data = request.get_json()
     logging.info("data sent for evaluation {}".format(data))
-    # result = parseMOHFeed()
-    print("CHECK FOR PROBLEM")
     entities = Article.query.order_by(desc(Article.datePublished)).all()
-    # entities = Article.query.all()
-    print("ENTITIES")
-    logging.info('RETURNING DB STUFF WORKS')
-    # logging.info("My result :{}".format(result))
     response = jsonify(json_list=[e.serialize for e in entities])
     return response
 
